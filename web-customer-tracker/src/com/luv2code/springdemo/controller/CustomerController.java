@@ -37,6 +37,7 @@ public class CustomerController {
 
 	@GetMapping("/showFormForAdd")
 	private String showFormForAdd(Model theModel) {
+
 		Customer theCustomer = new Customer();
 
 		theModel.addAttribute("customer", theCustomer);
@@ -63,5 +64,14 @@ public class CustomerController {
 		theModel.addAttribute("customer", theCustomer);
 
 		return "customer-form";
+	}
+
+	@GetMapping("/delete")
+	private String deleteCustomer(@RequestParam(name = "customerId") Integer customerId) {
+
+		// delete the customer
+		customerService.deleteCustomer(customerId);
+
+		return "redirect:/customer/list";
 	}
 }

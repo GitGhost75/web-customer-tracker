@@ -11,4 +11,6 @@ public interface CustomerService {
 	public void saveCustomer(Customer customer);
 
 	public Customer getCustomer(Integer customerId);
+
+	public void deleteCustomer(Integer customerId);
 }
