@@ -1,6 +1,8 @@
 package com.luv2code.springdemo.controller;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.luv2code.springdemo.entity.Customer;
 import com.luv2code.springdemo.service.CustomerService;
+import com.luv2code.springdemo.util.SortUtils;
 
 @Controller
 @RequestMapping("/customer")
@@ -24,10 +27,29 @@ public class CustomerController {
 
 	// new in Spring 4.3: GetMapping instead of @Requestmapping method=get...
 	@GetMapping("/list")
-	public String listCustomers(Model theModel) {
+	public String listCustomers(@RequestParam(required = false, name = "sort") String sort, Model theModel) {
 
 		// get customers from the service
 		List<Customer> theCustomers = customerService.getCustomers();
+
+		// create comparator
+		Comparator<Customer> theComparator = Comparator.comparing(Customer::getLastName);
+
+		if (null != sort) {
+
+			int sortColumn = Integer.parseInt(sort);
+
+			if (SortUtils.FIRST_NAME == sortColumn) {
+				theComparator = Comparator.comparing(Customer::getFirstName);
+			} else if (SortUtils.EMAIL == sortColumn) {
+				theComparator = Comparator.comparing(Customer::getEmail);
+			} else {
+				theComparator = Comparator.comparing(Customer::getLastName);
+			}
+		}
+
+		// sort customers
+		theCustomers = theCustomers.stream().sorted(theComparator).collect(Collectors.toList());
 
 		// add customers to model
 		theModel.addAttribute("customers", theCustomers);
