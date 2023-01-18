@@ -25,12 +25,17 @@ public class CustomerController {
 	@Autowired
 	private CustomerService customerService;
 
+	public CustomerService getCustomerService() {
+		// add this getter as service was null after adding aop
+		return customerService;
+	}
+
 	// new in Spring 4.3: GetMapping instead of @Requestmapping method=get...
 	@GetMapping("/list")
 	public String listCustomers(@RequestParam(required = false, name = "sort") String sort, Model theModel) {
 
 		// get customers from the service
-		List<Customer> theCustomers = customerService.getCustomers();
+		List<Customer> theCustomers = getCustomerService().getCustomers();
 
 		// create comparator
 		Comparator<Customer> theComparator = Comparator.comparing(Customer::getLastName);
@@ -71,7 +76,7 @@ public class CustomerController {
 	private String saveCustomer(@ModelAttribute("customer") Customer customer) {
 
 		// update customer using service
-		customerService.saveCustomer(customer);
+		getCustomerService().saveCustomer(customer);
 
 		return "redirect:/customer/list";
 	}
@@ -80,7 +85,7 @@ public class CustomerController {
 	private String showFormForUpdate(@RequestParam(name = "customerId") Integer customerId, Model theModel) {
 
 		// get customer from database
-		Customer theCustomer = customerService.getCustomer(customerId);
+		Customer theCustomer = getCustomerService().getCustomer(customerId);
 
 		// set customer as model attribute to pre-populate the form
 		theModel.addAttribute("customer", theCustomer);
@@ -92,7 +97,7 @@ public class CustomerController {
 	private String deleteCustomer(@RequestParam(name = "customerId") Integer customerId) {
 
 		// delete the customer
-		customerService.deleteCustomer(customerId);
+		getCustomerService().deleteCustomer(customerId);
 
 		return "redirect:/customer/list";
 	}
@@ -102,7 +107,7 @@ public class CustomerController {
 
 		// search customers containing searchName
 		// get customers from the service
-		List<Customer> theCustomers = customerService.searchCustomers(searchName);
+		List<Customer> theCustomers = getCustomerService().searchCustomers(searchName);
 
 		// add customers to model
 		theModel.addAttribute("customers", theCustomers);
