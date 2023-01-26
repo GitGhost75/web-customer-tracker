@@ -6,8 +6,6 @@ import com.luv2code.springdemo.entity.Customer;
 
 public interface CustomerService {
 
-	public List<Customer> getCustomers();
-
 	public void saveCustomer(Customer customer);
 
 	public Customer getCustomer(Integer customerId);
@@ -15,4 +13,6 @@ public interface CustomerService {
 	public void deleteCustomer(Integer customerId);
 
 	public List<Customer> searchCustomers(String searchName);
+
+	public List<Customer> getCustomers(int theSortField);
 }

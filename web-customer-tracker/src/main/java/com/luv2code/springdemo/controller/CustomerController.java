@@ -1,8 +1,6 @@
 package com.luv2code.springdemo.controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,26 +33,16 @@ public class CustomerController {
 	public String listCustomers(@RequestParam(required = false, name = "sort") String sort, Model theModel) {
 
 		// get customers from the service
-		List<Customer> theCustomers = getCustomerService().getCustomers();
+		List<Customer> theCustomers = null;
 
-		// create comparator
-		Comparator<Customer> theComparator = Comparator.comparing(Customer::getLastName);
-
-		if (null != sort) {
-
-			int sortColumn = Integer.parseInt(sort);
-
-			if (SortUtils.FIRST_NAME == sortColumn) {
-				theComparator = Comparator.comparing(Customer::getFirstName);
-			} else if (SortUtils.EMAIL == sortColumn) {
-				theComparator = Comparator.comparing(Customer::getEmail);
-			} else {
-				theComparator = Comparator.comparing(Customer::getLastName);
-			}
+		// check for sort field
+		if (sort != null) {
+			int theSortField = Integer.parseInt(sort);
+			theCustomers = customerService.getCustomers(theSortField);
+		} else {
+			// no sort field provided ... default to sorting by last name
+			theCustomers = customerService.getCustomers(SortUtils.LAST_NAME);
 		}
-
-		// sort customers
-		theCustomers = theCustomers.stream().sorted(theComparator).collect(Collectors.toList());
 
 		// add customers to model
 		theModel.addAttribute("customers", theCustomers);

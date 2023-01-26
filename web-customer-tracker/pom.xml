@@ -95,9 +95,15 @@
 			<artifactId>jaxb-api</artifactId>
 			<version>2.3.0</version>
 		</dependency>
+		<!-- Add Jackson for JSON converters -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.9.2</version>
+		</dependency>
 	</dependencies>
 	<build>
-		<finalName>spring-web-customer-tracker-all-java-config</finalName>
+		<finalName>spring-crm-client</finalName>
 		<plugins>
 			<!-- Builds a Web Application Archive (WAR) file from the project output 
 				and its dependencies. -->
